@@ -384,14 +384,54 @@ INSERT INTO astronauts(Name,Year,GroupNum,Status,Birth_Date,Birth_Place,Gender,A
 
 /*
 Question answered:
-What is the average age of an astronauts and how old are the youngest and oldest astronauts on record?
+What is the average age of an astronaut and how old are the youngest and oldest astronauts on record?
 
-Skills are demonstrated in this query:
-- Agregate functions use (ROUND(),AVG(),MIN(),MAX())
-- MYSQL funtion use (YEAR(), NOW())
+Notes:
+The average astronaut age query should account for active status astronauts and astronauts who died in action, but should omit
+'retired' status, 'management' status, and astronauts who died of other causes than a NASA mission.
+
+The oldest and youngest atronauts on file should be of active status.
+
+Skills demonstrated in the below queries:
+- Agregate function use (ROUND(),AVG(),MIN(),MAX())
+- MYSQL global funtion use (YEAR(), NOW())
 - Casting data type (STR_TO_DATE)
+- NULL statement handling
+- Creating Aliases
+- OR/AND statements implementation
+- IF statement implementation
+- NOT operator implementation
 */
 
-SELECT ROUND(AVG(YEAR(NOW())-YEAR(STR_TO_DATE(Birth_Date, "%m/%d/%Y")))) AS Average_age FROM astronauts;
-SELECT MAX(YEAR(NOW())-YEAR(STR_TO_DATE(Birth_Date, "%m/%d/%Y"))) AS Oldest FROM astronauts;
-SELECT MIN(YEAR(NOW())-YEAR(STR_TO_DATE(Birth_Date, "%m/%d/%Y"))) AS Youngest FROM astronauts;
+SELECT ROUND(AVG(IF(Status='Deceased',YEAR(Death_date)-YEAR(STR_TO_DATE(Birth_Date, "%m/%d/%Y")), YEAR(NOW())-YEAR(STR_TO_DATE(Birth_Date, "%m/%d/%Y"))))) AS Average_age
+FROM astronauts 
+WHERE Status='Active' OR (Status='Deceased' AND Death_Mission IS NOT NULL);
+/*
++-------------+
+| Average_age |
++-------------+
+|          57 |
++-------------+
+*/
+
+SELECT MAX(YEAR(NOW())-YEAR(STR_TO_DATE(Birth_Date, "%m/%d/%Y"))) AS Age
+FROM astronauts 
+WHERE Status='Active'; 
+/*
++--------+
+| Oldest |
++--------+
+|     67 |
++--------+
+*/
+
+SELECT MIN(YEAR(NOW())-YEAR(STR_TO_DATE(Birth_Date, "%m/%d/%Y"))) AS Age
+FROM astronauts
+WHERE Status='Active';
+/*
++----------+
+| Youngest |
++----------+
+|       44 |
++----------+
+*/
