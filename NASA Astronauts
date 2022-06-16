@@ -435,3 +435,71 @@ WHERE Status='Active';
 |       44 |
 +----------+
 */
+
+/*
+Question answered:
+What is the ratio of Female astronauts to Male Astronauts for each enrollment year? What year showed the least disparity between the two gender?
+
+Skills demonstrated in the below queries:
+- Agregate function use (ROUND(),SUM())
+- Casting data type (INT to FLOAT)
+- NULL statement handling
+- Creating Aliases
+- GROUP BY statement implementation
+- HAVING statement implementation
+- ORDER BY statement implementation
+- NOT operator implementation
+- LIMIT statement implementation
+*/
+
+--What is the ratio of Female astronauts to Male Astronauts for each enrollment year?
+SELECT Year, ROUND(CAST(SUM(Gender='Female') AS float) / CAST(SUM(Gender='Male') AS float) * 100, 4) AS Percentage_Female_To_Male 
+FROM astronauts 
+GROUP BY Year 
+HAVING YEAR IS NOT NULL 
+ORDER BY Percentage_Female_To_Male DESC;
+/*
++------+---------------------------+
+| Year | Percentage_Female_To_Male |
++------+---------------------------+
+| 2009 |                   50.0000 |
+| 1995 |                   35.7143 |
+| 1996 |                   29.6296 |
+| 1990 |                   27.7778 |
+| 2004 |                   22.2222 |
+| 2000 |                   21.4286 |
+| 1978 |                   20.6897 |
+| 1984 |                   20.0000 |
+| 1998 |                   19.0476 |
+| 1992 |                   18.7500 |
+| 1985 |                   18.1818 |
+| 1987 |                   15.3846 |
+| 1980 |                   11.7647 |
+| 1967 |                    0.0000 |
+| 1963 |                    0.0000 |
+| 1965 |                    0.0000 |
+| 1966 |                    0.0000 |
+| 1969 |                    0.0000 |
+| 1962 |                    0.0000 |
+| 1959 |                    0.0000 |
++------+---------------------------+
+*/
+
+--What year showed the least disparity between the two gender?
+SELECT 
+Year, 
+SUM(Gender='Female') AS Female, 
+SUM(Gender='Male') AS Male, 
+ROUND(CAST(SUM(Gender='Female') AS float) / CAST(SUM(Gender='Male') AS float) * 100, 4) AS Percentage_Female_To_Male 
+FROM astronauts 
+GROUP BY Year 
+HAVING YEAR IS NOT NULL 
+ORDER BY Percentage_Female_To_Male DESC 
+LIMIT 1;
+/*
++------+--------+------+---------------------------+
+| Year | Female | Male | Percentage_Female_To_Male |
++------+--------+------+---------------------------+
+| 2009 |      3 |    6 |                   50.0000 |
++------+--------+------+---------------------------+
+*/
