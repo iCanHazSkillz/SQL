@@ -3,6 +3,7 @@
   Data Source:
   https://www.kaggle.com/nasa/astronaut-yearbook
 */
+
 CREATE TABLE astronauts(
    Name                TEXT PRIMARY KEY,
    Year                INTEGER,
@@ -384,7 +385,8 @@ INSERT INTO astronauts(Name,Year,GroupNum,Status,Birth_Date,Birth_Place,Gender,A
 
 /*
 Question answered:
-What is the average age of an astronaut and how old are the youngest and oldest astronauts on record?
+- What is the average age of an astronaut and how old are the youngest and oldest astronauts on record?
+- What is the ratio of Female astronauts to Male Astronauts for each enrollment year? What year showed the least disparity between the two gender?
 
 Notes:
 The average astronaut age query should account for active status astronauts and astronauts who died in action, but should omit
@@ -393,16 +395,21 @@ The average astronaut age query should account for active status astronauts and 
 The oldest and youngest atronauts on file should be of active status.
 
 Skills demonstrated in the below queries:
-- Agregate function use (ROUND(),AVG(),MIN(),MAX())
+- Agregate function use (ROUND(),AVG(),SUM(),MIN(),MAX())
+- GROUP BY statement implementation
+- HAVING statement implementation
+- ORDER BY statement implementation
 - MYSQL global funtion use (YEAR(), NOW())
-- Casting data type (STR_TO_DATE)
+- Casting data type (STR_TO_DATE, INT to FLOAT)
 - NULL statement handling
 - Creating Aliases
 - OR/AND statements implementation
 - IF statement implementation
 - NOT operator implementation
+- LIMIT statement implementation
 */
 
+--What is the average age of an astronaut?
 SELECT ROUND(AVG(IF(Status='Deceased',YEAR(Death_date)-YEAR(STR_TO_DATE(Birth_Date, "%m/%d/%Y")), YEAR(NOW())-YEAR(STR_TO_DATE(Birth_Date, "%m/%d/%Y"))))) AS Average_age
 FROM astronauts 
 WHERE Status='Active' OR (Status='Deceased' AND Death_Mission IS NOT NULL);
@@ -414,6 +421,7 @@ WHERE Status='Active' OR (Status='Deceased' AND Death_Mission IS NOT NULL);
 +-------------+
 */
 
+--How old is the oldest active astronaut?
 SELECT MAX(YEAR(NOW())-YEAR(STR_TO_DATE(Birth_Date, "%m/%d/%Y"))) AS Age
 FROM astronauts 
 WHERE Status='Active'; 
@@ -424,7 +432,7 @@ WHERE Status='Active';
 |     67 |
 +--------+
 */
-
+--How old is the youngest active astronaut?
 SELECT MIN(YEAR(NOW())-YEAR(STR_TO_DATE(Birth_Date, "%m/%d/%Y"))) AS Age
 FROM astronauts
 WHERE Status='Active';
@@ -434,22 +442,6 @@ WHERE Status='Active';
 +----------+
 |       44 |
 +----------+
-*/
-
-/*
-Question answered:
-What is the ratio of Female astronauts to Male Astronauts for each enrollment year? What year showed the least disparity between the two gender?
-
-Skills demonstrated in the below queries:
-- Agregate function use (ROUND(),SUM())
-- Casting data type (INT to FLOAT)
-- NULL statement handling
-- Creating Aliases
-- GROUP BY statement implementation
-- HAVING statement implementation
-- ORDER BY statement implementation
-- NOT operator implementation
-- LIMIT statement implementation
 */
 
 --What is the ratio of Female astronauts to Male Astronauts for each enrollment year?
