@@ -387,11 +387,11 @@ INSERT INTO astronauts(Name,Year,GroupNum,Status,Birth_Date,Birth_Place,Gender,A
 Question answered:
 - What is the average age of an astronaut and how old are the youngest and oldest astronauts on record?
 - What is the ratio of Female astronauts to Male Astronauts for each enrollment year? What year showed the least disparity between the two gender?
+- Group and order astronauts by their experience level based on the number of hours spent space walking.
 
 Notes:
 The average astronaut age query should account for active status astronauts and astronauts who died in action, but should omit
 'retired' status, 'management' status, and astronauts who died of other causes than a NASA mission.
-
 The oldest and youngest atronauts on file should be of active status.
 
 Skills demonstrated in the below queries:
@@ -404,7 +404,7 @@ Skills demonstrated in the below queries:
 - NULL statement handling
 - Creating Aliases
 - OR/AND statements implementation
-- IF statement implementation
+- IF/CASE statement implementation
 - NOT operator implementation
 - LIMIT statement implementation
 */
@@ -494,4 +494,25 @@ LIMIT 1;
 +------+--------+------+---------------------------+
 | 2009 |      3 |    6 |                   50.0000 |
 +------+--------+------+---------------------------+
+*/
+
+--Group and order astronauts by their experience level based on the number of hours spent in space.
+SELECT Name, Space_Walks_hr,
+CASE
+WHEN Space_Walks_hr >= 60 THEN 'Master'
+WHEN Space_Walks_hr >= 50 THEN 'Veteran'
+WHEN Space_Walks_hr >= 40 THEN 'Professional'
+Else 'Rookie'
+END AS Experience_LVL 
+FROM astronauts 
+ORDER BY Space_Walks_hr DESC;
+/*
++----------------+-----------------+
+| Experience_LVL | Astronaut_Count |
+|         Master |               1 |
+|        Veteran |	             4 |
+|   Professional |              14 |
+|         Rookie |             116 |
+|         No EXP |	           222 |
++----------------+-----------------+
 */
